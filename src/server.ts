@@ -6,15 +6,21 @@ import * as mongoose from 'mongoose';
 import * as http from 'http';
 import * as path from 'path';
 import * as passport from 'passport';
-import { Strategy as BearerStrategy } from 'passport-http-bearer';
-import { OAuth2Strategy as GoogleStrategy } from 'passport-google-oauth';
-import * as jwt from 'jsonwebtoken';
 
 import * as logging from './logging';
 import { router as apiRouter } from './api/router';
 import { router as authRouter } from './auth/router';
 import * as config from './config';
+import { setup as setupPassport } from './passport';
 
+import * as webpack from 'webpack';
+import * as webpackMiddleware from 'webpack-dev-middleware';
+import * as webpackHotMiddleware from 'webpack-hot-middleware';
+
+//const webpackConfig = require('./webpack.config.js');
+import { config as webpackConfig } from './webpack.config';
+
+const isDeveloping = process.env.NODE_ENV !== 'production';
 
 const sessionConfig = {
   resave: false,
@@ -23,50 +29,14 @@ const sessionConfig = {
   signed: true
 };
 
-const options = {
-  clientID: config.GOOGLE_CLIENT_ID,
-  clientSecret: config.GOOGLE_CLIENT_SECRET,
-  callbackURL: config.GOOGLE_CLIENT_CALLBACK_URL
-};
-passport.use(
-  new GoogleStrategy(
-    options,
-    (accessToken, refreshToken, profile, done) => {
-      done(null, { googleId: profile.id });
-    }
-  )
-);
-
-passport.use(
-  new BearerStrategy(
-    function (token, done) {
-      done(null, { access_token: token }, { message: 'read', scope: 'read' });
-    }
-  )
-);
-
-passport.serializeUser((user: any, done) => {
-  const token = jwt.sign(user, config.JWT_SECRET, { expiresIn: '2h' });
-
-  done(null, token);
-});
-
-passport.deserializeUser((user: string, done) => {
-  try {
-    if (jwt.verify(user, config.JWT_SECRET)) {
-      return done(null, user);
-    }
-  }
-  catch (error) {
-  }
-
-  done('invalid user', null);
-});
+setupPassport();
 
 const app = express();
 
-app.use(logging.requestLogger);
 app.set('port', process.env.PORT || 3001);
+app.set('hostIp', process.env.HOSTIP || '127.0.0.1');
+
+app.use(logging.requestLogger);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: true
@@ -79,10 +49,32 @@ app.use(passport.session());
 app.use('/api', apiRouter);
 app.use('/auth', authRouter);
 
-const clientPath = path.resolve(__dirname + '/../static');
-app.use(express.static(clientPath));
-app.use((req, res) => res.sendFile(path.join(clientPath, 'index.html')));
 
+if (isDeveloping) {
+  try {
+    const compiler = webpack(webpackConfig);
+    const middleware = webpackMiddleware(compiler, {
+      publicPath: webpackConfig.output.publicPath,
+      stats: {
+        colors: true,
+        hash: false,
+        timings: true,
+        chunks: false,
+        chunkModules: false,
+        modules: false
+      }
+    });
+
+    app.use(middleware);
+    app.use(webpackHotMiddleware(compiler));
+  } catch (errr) {
+    logging.error(errr.message, errr)
+  }
+} else {
+  const clientPath = path.resolve(__dirname + '/../static');
+  app.use(express.static(clientPath));
+  app.use((req, res) => res.sendFile(path.join(clientPath, 'index.html')));
+}
 app.use(logging.errorLogger);
 
 app.use((req, res) => {
@@ -99,7 +91,9 @@ connect(connectionString);
 
 connection.on('error', (args: string[]) => logging.error('connection error:', args));
 connection.once('open', () => {
-  http.createServer(app).listen(app.get('port'), () => {
-    logging.info('Express server listening on port ' + app.get('port'));
+  const port = app.get('port');
+  const hostIp = app.get('hostIp');
+  http.createServer(app).listen(port, hostIp, () => {
+    logging.info(`==> 🌎 Listening on port ${port}. Open up http://${hostIp}:${port}/ in your browser.`);
   });
 });

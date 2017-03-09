@@ -3,7 +3,9 @@
   "watch": [
     "src/**/*.ts"
   ],
-  "ignore": [],
+  "ignore": [
+    "src/app/**/*"
+  ],
   "exec": "ts-node ./src/server.ts",
    "ext": "ts tsx json"
 }

@@ -6,6 +6,6 @@
   "ignore": [
     "src/app/**/*"
   ],
-  "exec": "ts-node ./src/server.ts",
+  "exec": "tslint 'src/**/*.ts' --force && ts-node ./src/server.ts",
   "ext": "ts tsx json"
 }

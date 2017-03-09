@@ -45,4 +45,4 @@ export const setup = () => {
 
     done('invalid user', null);
   });
-}
+};

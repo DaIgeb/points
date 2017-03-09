@@ -34,15 +34,22 @@ export const config: webpack.Configuration = {
         exclude: [/node_modules/],
         use: [{
           loader: 'babel-loader',
-          options: { presets: ["react", 'es2015'] }
+          options: { presets: ['react', 'es2015'] }
         }],
+      },
+      {
+        test: /\.tsx?$/,
+        enforce: 'pre',
+        loader: 'tslint-loader',
+        options: {
+          emitErrors: true
+        }
       },
       {
         test: /\.tsx?$/,
         exclude: [/node_modules/],
         use: [{
-          loader: 'ts-loader',
-          options: { presets: ["react", 'es2015'] }
+          loader: 'ts-loader'
         }],
       },
       {
@@ -56,9 +63,9 @@ export const config: webpack.Configuration = {
         test: /\.css$/,
         exclude: [/node_modules/],
         use: [
-          { loader: "style-loader" },
+          { loader: 'style-loader' },
           {
-            loader: "css-loader",
+            loader: 'css-loader',
             options: {
               sourceMap: true,
               modules: true,

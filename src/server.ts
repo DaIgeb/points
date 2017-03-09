@@ -17,7 +17,6 @@ import * as webpack from 'webpack';
 import * as webpackMiddleware from 'webpack-dev-middleware';
 import * as webpackHotMiddleware from 'webpack-hot-middleware';
 
-//const webpackConfig = require('./webpack.config.js');
 import { config as webpackConfig } from './webpack.config';
 
 const isDeveloping = process.env.NODE_ENV !== 'production';
@@ -51,25 +50,21 @@ app.use('/auth', authRouter);
 
 
 if (isDeveloping) {
-  try {
-    const compiler = webpack(webpackConfig);
-    const middleware = webpackMiddleware(compiler, {
-      publicPath: webpackConfig.output.publicPath,
-      stats: {
-        colors: true,
-        hash: false,
-        timings: true,
-        chunks: false,
-        chunkModules: false,
-        modules: false
-      }
-    });
+  const compiler = webpack(webpackConfig);
+  const middleware = webpackMiddleware(compiler, {
+    publicPath: webpackConfig.output.publicPath,
+    stats: {
+      colors: true,
+      hash: false,
+      timings: true,
+      chunks: false,
+      chunkModules: false,
+      modules: false
+    }
+  });
 
-    app.use(middleware);
-    app.use(webpackHotMiddleware(compiler));
-  } catch (errr) {
-    logging.error(errr.message, errr)
-  }
+  app.use(middleware);
+  app.use(webpackHotMiddleware(compiler));
 } else {
   const clientPath = path.resolve(__dirname + '/../static');
   app.use(express.static(clientPath));

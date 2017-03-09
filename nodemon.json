@@ -7,5 +7,5 @@
     "src/app/**/*"
   ],
   "exec": "ts-node ./src/server.ts",
-   "ext": "ts tsx json"
+  "ext": "ts tsx json"
 }

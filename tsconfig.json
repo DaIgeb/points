@@ -1,0 +1,26 @@
+{
+    "compilerOptions": {
+        "allowJs": true,
+        "noImplicitAny": true,
+        "allowUnreachableCode": false,
+        "inlineSourceMap": true,
+        "inlineSources": true,
+        "noImplicitReturns": true,
+        "noImplicitThis": true,
+        "target": "es6",
+        "outDir": "dist",
+        "module": "commonjs"
+    },
+    "files": [
+        "typings.d.ts"
+    ],
+    "include": [
+        "src/**/*.ts"
+    ],
+    "exclude": [
+        "node_modules",
+        "build",
+        "config",
+        "release"
+    ]
+}

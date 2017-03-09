@@ -1,0 +1,5 @@
+/node_modules
+/dist
+/src/**/*.js
+/src/config.ts
+/static

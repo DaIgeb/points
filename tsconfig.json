@@ -13,7 +13,8 @@
         "module": "commonjs"
     },
     "files": [
-        "typings.d.ts"
+        "typings.d.ts",
+        "redux.d.ts"
     ],
     "include": [
         "src/**/*.ts"

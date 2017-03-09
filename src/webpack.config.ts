@@ -2,13 +2,24 @@ import * as path from 'path';
 import * as webpack from 'webpack';
 import * as HtmlWebpackPlugin from 'html-webpack-plugin';
 
+const BASE_CSS_LOADER = {
+  loader: 'css-loader',
+  options: { sourceMap: true, minimize: false }
+};
+
 export const config: webpack.Configuration = {
   devtool: 'eval-source-map',
-  context: path.resolve(path.join(__dirname, 'app')),
-  entry: [
-    'webpack-hot-middleware/client?reload=true',
-    './main.tsx'
-  ],
+  // context: path.resolve(path.join(__dirname, 'app')),
+  entry: {
+    middleware: 'webpack-hot-middleware/client?reload=true',
+    app: './src/app/main.tsx',
+    vendor: ['react', 'react-dom', 'react-router']
+  },
+  resolve: {
+    extensions: [
+      '.ts', '.tsx', '.js', '.jsx', '.yjson'
+    ]
+  },
   output: {
     path: path.resolve(__dirname, './dist'),
     filename: '[name].js',
@@ -18,7 +29,12 @@ export const config: webpack.Configuration = {
     new HtmlWebpackPlugin({
       inject: 'body',
       filename: 'index.html',
-      template: 'index.html'
+      template: 'src/app/index.html'
+    }),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'vendor',
+      minChunks: Infinity,
+      filename: 'vendor-[hash].min.js',
     }),
     new webpack.optimize.OccurrenceOrderPlugin(true),
     new webpack.HotModuleReplacementPlugin(),
@@ -30,11 +46,33 @@ export const config: webpack.Configuration = {
   module: {
     rules: [
       {
+        test: /\.scss$/,
+        exclude: [],
+        use: [
+          'style-loader',
+          BASE_CSS_LOADER,
+          // 'postcss-loader',
+          {
+            loader: 'sass-loader',
+            options: { sourceMap: true, includePaths: [path.resolve(__dirname + '/app/styles')] }
+          }
+        ]
+      },
+      {
+        test: /\.css$/,
+        exclude: [],
+        use: [
+          'style-loader',
+          BASE_CSS_LOADER,
+          // 'postcss-loader'
+        ]
+      },
+      {
         test: /\.jsx?$/,
         exclude: [/node_modules/],
         use: [{
           loader: 'babel-loader',
-          options: { presets: ['react', 'es2015'] }
+          options: { presets: ['latest', 'react', 'es2015', { modules: false }] }
         }],
       },
       {
@@ -73,6 +111,106 @@ export const config: webpack.Configuration = {
             }
           },
         ],
+      },
+      {
+        test: /\.woff(\?.*)?$/,
+        exclude: [/node_modules/],
+        use: [
+          {
+            loader: 'url-loader',
+            options: {
+              prefix: 'fonts/',
+              name: '[path][name].[ext]',
+              limit: 10000,
+              mimetype: 'application/font-woff'
+            }
+          }
+        ]
+      },
+      {
+        test: /\.woff2(\?.*)?$/,
+        exclude: [/node_modules/],
+        use: [
+          {
+            loader: 'url-loader',
+            options: {
+              prefix: 'fonts/',
+              name: '[path][name].[ext]',
+              limit: 10000,
+              mimetype: 'application/font-woff2'
+            }
+          }
+        ]
+      },
+      {
+        test: /\.otf(\?.*)?$/,
+        exclude: [/node_modules/],
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              prefix: 'fonts/',
+              name: '[path][name].[ext]',
+              limit: 10000,
+              mimetype: 'font/opentype'
+            }
+          }
+        ]
+      },
+      {
+        test: /\.ttf(\?.*)?$/,
+        exclude: [/node_modules/],
+        use: [
+          {
+            loader: 'url-loader',
+            options: {
+              prefix: 'fonts/',
+              name: '[path][name].[ext]',
+              limit: 10000,
+              mimetype: 'application/octet-stream'
+            }
+          }
+        ]
+      },
+      {
+        test: /\.eot(\?.*)?$/,
+        exclude: [/node_modules/],
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              prefix: 'fonts/',
+              name: '[path][name].[ext]'
+            }
+          }
+        ]
+      },
+      {
+        test: /\.svg(\?.*)?$/,
+        exclude: [/node_modules/],
+        use: [
+          {
+            loader: 'url-loader',
+            options: {
+              prefix: 'fonts/',
+              name: '[path][name].[ext]',
+              limit: 10000,
+              mimetype: 'image/svg+xml'
+            }
+          }
+        ]
+      },
+      {
+        test: /\.(png|jpg)$/,
+        exclude: [/node_modules/],
+        use: [
+          {
+            loader: 'url-loader',
+            options: {
+              limit: 8192
+            }
+          }
+        ]
       }
     ]
   }

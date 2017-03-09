@@ -1,3 +1,4 @@
+import { verbose } from './logging';
 import * as express from 'express';
 import * as session from 'express-session';
 import * as bodyParser from 'body-parser';
@@ -50,21 +51,28 @@ app.use('/auth', authRouter);
 
 
 if (isDeveloping) {
-  const compiler = webpack(webpackConfig);
-  const middleware = webpackMiddleware(compiler, {
-    publicPath: webpackConfig.output.publicPath,
-    stats: {
-      colors: true,
-      hash: false,
-      timings: true,
-      chunks: false,
-      chunkModules: false,
-      modules: false
-    }
-  });
+  try {
+    const compiler = webpack(webpackConfig);
 
-  app.use(middleware);
-  app.use(webpackHotMiddleware(compiler));
+    const middleware = webpackMiddleware(compiler, {
+      publicPath: webpackConfig.output.publicPath,
+      stats: {
+        colors: true,
+        hash: false,
+        timings: true,
+        chunks: false,
+        chunkModules: false,
+        modules: false,
+      },
+      quiet: false,
+      noInfo: false
+    });
+
+    app.use(middleware);
+    app.use(webpackHotMiddleware(compiler));
+  } catch (err) {
+    console.error(err.message, err);
+  }
 } else {
   const clientPath = path.resolve(__dirname + '/../static');
   app.use(express.static(clientPath));

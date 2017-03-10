@@ -1,4 +1,3 @@
-
 declare module "mongoose-api" {
   import * as express from "express";
 

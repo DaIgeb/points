@@ -1,19 +1,20 @@
 // We only need to import the modules necessary for initial render
-import {CoreLayout} from '../layouts/CoreLayout';
-import {IndexRoute as Home} from './Home';
-import {Store} from 'react-redux';
+import { CoreLayout } from '../layouts/CoreLayout';
+import { IndexRoute as Home } from './Home';
+import { createEventsRoute } from './Events';
+import { Store } from 'react-redux';
 import { PlainRoute } from 'react-router';
 
 /*  Note: Instead of using JSX, we recommend using react-router
     PlainRoute objects to build route definitions.   */
 
-export const createRoutes = (store: Store<any>) : PlainRoute => ({
-  path        : '/',
-  component   : CoreLayout,
-  indexRoute  : Home,
-  childRoutes : [
-/*    EventsRoute(store),
-    PointsRoute(store)*/
+export const createRoutes = (store: Store<any>): PlainRoute => ({
+  path: '/',
+  component: CoreLayout,
+  indexRoute: Home,
+  childRoutes: [
+    createEventsRoute(store)
+    // PointsRoute(store)
   ]
 });
 

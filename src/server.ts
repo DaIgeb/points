@@ -49,7 +49,6 @@ app.use(passport.session());
 app.use('/api', apiRouter);
 app.use('/auth', authRouter);
 
-
 if (isDeveloping) {
   try {
     const compiler = webpack(webpackConfig);

@@ -1,3 +1,4 @@
+import { authenticate } from './authenticate';
 import { router as v1Router } from './v1/router';
 import { Router } from 'express';
 import * as passport from 'passport';
@@ -10,6 +11,8 @@ router.use(function (req, res, next) {
 
   next();
 });
+
+router.use(authenticate);
 
 router.use('/v1', v1Router);
 

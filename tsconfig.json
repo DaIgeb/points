@@ -12,12 +12,9 @@
         "outDir": "dist",
         "module": "commonjs"
     },
-    "files": [
-        "typings.d.ts",
-        "redux.d.ts"
-    ],
     "include": [
-        "src/**/*.ts"
+        "src/**/*",
+        "*.d.ts"
     ],
     "exclude": [
         "node_modules",

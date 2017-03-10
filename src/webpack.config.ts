@@ -17,7 +17,7 @@ export const config: webpack.Configuration = {
   },
   resolve: {
     extensions: [
-      '.ts', '.tsx', '.js', '.jsx', '.yjson'
+      '.ts', '.tsx', '.js', '.jsx', '.json'
     ]
   },
   output: {

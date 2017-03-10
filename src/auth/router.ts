@@ -4,12 +4,12 @@ import * as passport from 'passport';
 export const router = Router();
 
 // TODO display login/register page
-router.get('login', (req, res) => {
+router.get('/login', (req, res) => {
   if (req.query.return) {
     req.session.oauth2return = req.query.return;
   }
 
-  res.redirect('auth/google');
+  res.redirect('google');
 });
 
 router.get(

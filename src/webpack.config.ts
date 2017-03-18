@@ -13,7 +13,7 @@ export const config: webpack.Configuration = {
   entry: {
     middleware: 'webpack-hot-middleware/client?reload=true',
     app: './src/app/main.tsx',
-    vendor: ['react', 'react-dom', 'react-router']
+    vendor: ['react', 'react-dom', 'react-router', 'babel-polyfill']
   },
   resolve: {
     extensions: [
@@ -72,7 +72,7 @@ export const config: webpack.Configuration = {
         exclude: [/node_modules/],
         use: [{
           loader: 'babel-loader',
-          options: { presets: ['latest', 'react', 'es2015', { modules: false }] }
+          options: { presets: ['latest', 'stage-0', 'react', 'es2015', { modules: false }] }
         }],
       },
       {

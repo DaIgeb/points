@@ -1,3 +1,7 @@
+interface NodeRequire {
+  ensure: (modules: string[], cb: (require: (module: string) => any) => void, modulename: string) => void;
+}
+
 declare module "mongoose-api" {
   import * as express from "express";
 
@@ -20,7 +24,6 @@ declare module "express-winston" {
 declare interface NodeModule {
   hot: any
 }
-
 
 /*
 declare module "react-router-redux" {

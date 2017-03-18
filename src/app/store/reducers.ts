@@ -1,11 +1,11 @@
-import { combineReducers, ReducersMapObject, Store, Reducer } from 'redux';
-import { locationReducer } from './location';
-// import { reducer as formReducer } from 'redux-form'
+import { combineReducers, ReducersMapObject, Reducer } from 'redux';
+import { routerReducer } from 'react-router-redux';
+import { reducer } from 'redux-oidc';
 
 export const makeRootReducer = (asyncReducers: ReducersMapObject): Reducer<{}> => {
   return combineReducers<{}>({
-    location: locationReducer,
-    //  form: formReducer,
+    routing: routerReducer,
+    oidc: reducer,
     ...asyncReducers
   });
 };

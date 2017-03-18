@@ -1,7 +1,6 @@
 import { authenticate } from './authenticate';
 import { router as v1Router } from './v1/router';
 import { Router } from 'express';
-import * as passport from 'passport';
 
 export const router = Router();
 // Add cors

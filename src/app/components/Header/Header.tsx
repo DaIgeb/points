@@ -1,13 +1,17 @@
 import * as React from 'react';
 import AppBar from 'material-ui/AppBar';
-import { Tabs, Tab } from 'material-ui/Tabs';
 import Drawer from 'material-ui/Drawer';
+import FlatButton from 'material-ui/FlatButton';
 import MenuItem from 'material-ui/MenuItem';
 import { IndexLink, Link } from 'react-router';
 import './Header.scss';
+import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
+import { userManager } from '../../globals';
 
-export class Header extends React.Component<{}, { open: boolean }> {
-  constructor(props: {}) {
+type TProps = { push: (path: any) => void };
+export class HeaderComponent extends React.Component<TProps, { open: boolean }> {
+  constructor(props: TProps) {
     super(props);
     this.state = { open: false };
   }
@@ -16,17 +20,26 @@ export class Header extends React.Component<{}, { open: boolean }> {
   handleClose = () => this.setState({ open: false });
 
   render() {
+
     return <div>
-      <AppBar title='React Redux Starter Kit' onTitleTouchTap={this.handleToggle} onLeftIconButtonTouchTap={this.handleToggle} />
+      <AppBar title='React Redux Starter Kit'
+        onTitleTouchTap={this.handleToggle}
+        onLeftIconButtonTouchTap={this.handleToggle}
+        iconElementRight={<FlatButton label='Login'
+          onTouchTap={(event) => {
+            event.preventDefault();
+            userManager.signinRedirect();
+          }} />}
+      />
       <Drawer open={this.state.open} docked={false}
         width={200}
         onRequestChange={(open) => this.setState({ open })}>
         <MenuItem onTouchTap={this.handleClose} containerElement={<IndexLink to='/' activeClassName='route--active'>Home</IndexLink>}>Home</MenuItem>
-        <MenuItem onTouchTap={this.handleClose} containerElement={<Link to='/counter' activeClassName='route--active'>Counter</Link>}>Counter</MenuItem>
         <MenuItem onTouchTap={this.handleClose} containerElement={<Link to='/points' activeClassName='route--active'>Points</Link>}>Points</MenuItem>
-        <MenuItem onTouchTap={this.handleClose} containerElement={<Link to='/event' activeClassName='route--active'>Event</Link>}>Event</MenuItem>
         <MenuItem onTouchTap={this.handleClose} containerElement={<Link to='/events' activeClassName='route--active'>Events</Link>}>Events</MenuItem>
       </Drawer>
     </div>;
   }
 }
+
+export const Header = connect(() => ({}), { push })(HeaderComponent);

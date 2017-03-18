@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { TGlobalState } from '../modules/types';
+import { TEventsState, TGlobalState } from '../modules/types';
 import { loadEvents } from '../modules/events';
 import { push } from 'react-router-redux';
 
@@ -9,7 +9,7 @@ import { push } from 'react-router-redux';
     wiring in the actions and state necessary to render a presentational
     component - in this case, the counter:   */
 
-import { Events, TEventsProps, TEventsDispatchProps } from '../components/Events';
+import { Event } from '../components/Event';
 
 /*  Object of action creators (can also be function that returns object).
     Keys will be passed as props to presentational components. Here we are
@@ -17,10 +17,7 @@ import { Events, TEventsProps, TEventsDispatchProps } from '../components/Events
 
 const mapDispatchToProps = { loadEvents, push };
 
-const mapStateToProps = (state: TGlobalState, ownProps: { params: any }): TEventsProps => ({
-  ...state.events,
-  params: ownProps.params
-});
+const mapStateToProps = (state: TGlobalState): TEventsState => state.events;
 
 /*  Note: mapStateToProps is where you should use `reselect` to create selectors, ie:
 
@@ -36,4 +33,4 @@ const mapStateToProps = (state: TGlobalState, ownProps: { params: any }): TEvent
     Selectors are composable. They can be used as input to other selectors.
     https://github.com/reactjs/reselect    */
 
-export const Container = connect<TEventsProps, TEventsDispatchProps, any>(mapStateToProps, mapDispatchToProps)(Events);
+export const Container = connect<TEventsState, {}, TEventsState>(mapStateToProps, mapDispatchToProps)(Event);

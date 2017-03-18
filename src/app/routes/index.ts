@@ -2,6 +2,7 @@
 import { CoreLayout } from '../layouts/CoreLayout';
 import { IndexRoute as Home } from './Home';
 import { createEventsRoute } from './Events';
+import { CallbackPage } from '../components/CallbackPage';
 import { Store } from 'react-redux';
 import { PlainRoute } from 'react-router';
 
@@ -13,8 +14,15 @@ export const createRoutes = (store: Store<any>): PlainRoute => ({
   component: CoreLayout,
   indexRoute: Home,
   childRoutes: [
-    createEventsRoute(store)
-    // PointsRoute(store)
+    createEventsRoute(store),
+    {
+      path: 'callback',
+      component: CallbackPage
+    },
+    {
+      path: 'auth/google/callback',
+      component: CallbackPage
+    }
   ]
 });
 

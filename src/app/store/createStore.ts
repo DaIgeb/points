@@ -1,27 +1,27 @@
 import { __DEV__ } from '../globals';
 import { applyMiddleware, compose, createStore as reduxCreateStore, StoreEnhancer, GenericStoreEnhancer, Middleware } from 'redux';
 import thunk from 'redux-thunk';
-import { browserHistory } from 'react-router';
+import { History } from 'History';
+import { routerMiddleware } from 'react-router-redux';
 import { makeRootReducer } from './reducers';
-import { updateLocation } from './location';
+import createOidcMiddleware from 'redux-oidc';
+import { userManager } from '../globals';
+import * as Oidc from 'oidc-client';
 
-export const createStore = (initialState = {}) => {
+Oidc.Log.logger = console;
+
+const oidcMiddleware = createOidcMiddleware(userManager, (state, action) => { console.log(state, action); return false; }, true, '/callback');
+
+export const createStore = (initialState = {}, history: History) => {
   // ======================================================
   // Middleware Configuration
   // ======================================================
-  const middleware: Middleware[] = [thunk];
+  const middleware: Middleware[] = [oidcMiddleware, thunk, routerMiddleware(history)];
 
   // ======================================================
   // Store Enhancers
   // ======================================================
   const enhancers: {}[] = [];
-
-  function getDebugSessionKey() {
-    // You can write custom logic here!
-    // By default we try to read the key from ?debug_session=<key> in the address bar
-    const matches = window.location.href.match(/[?&]debug_session=([^&#]+)\b/);
-    return (matches && matches.length > 0) ? matches[1] : null;
-  }
 
   let composeEnhancers: (enhancer: GenericStoreEnhancer, ...enhancers: {}[]) => StoreEnhancer<{}> = compose;
 
@@ -44,9 +44,6 @@ export const createStore = (initialState = {}) => {
     )
   );
   store.asyncReducers = {};
-
-  // To unsubscribe, invoke `store.unsubscribeHistory()` anytime
-  store.unsubscribeHistory = browserHistory.listen(updateLocation(store));
 
   if (module.hot) {
     module.hot.accept('./reducers', () => {

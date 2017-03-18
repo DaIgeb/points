@@ -1,8 +1,7 @@
-import { verbose } from './logging';
 import * as express from 'express';
 import * as session from 'express-session';
 import * as bodyParser from 'body-parser';
-import { Schema, connection, model, connect } from 'mongoose';
+import { connection, connect } from 'mongoose';
 import * as mongoose from 'mongoose';
 import * as http from 'http';
 import * as path from 'path';
@@ -17,8 +16,8 @@ import { setup as setupPassport } from './passport';
 import * as webpack from 'webpack';
 import * as webpackMiddleware from 'webpack-dev-middleware';
 import * as webpackHotMiddleware from 'webpack-hot-middleware';
-
 import { config as webpackConfig } from './webpack.config';
+const historyApiFallback = require('connect-history-api-fallback');
 
 const isDeveloping = process.env.NODE_ENV !== 'production';
 
@@ -67,6 +66,8 @@ if (isDeveloping) {
       noInfo: false
     });
 
+    app.use(middleware);
+    app.use(historyApiFallback());
     app.use(middleware);
     app.use(webpackHotMiddleware(compiler));
   } catch (err) {

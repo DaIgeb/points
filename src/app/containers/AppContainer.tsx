@@ -1,9 +1,12 @@
 import * as React from 'react';
 import { Component, PropTypes } from 'react';
-import { browserHistory, Router, PlainRoute } from 'react-router';
+import { Router, PlainRoute } from 'react-router';
+import { History } from 'History';
 import { Provider, Store } from 'react-redux';
+import { OidcProvider } from 'redux-oidc';
+import {userManager} from '../globals';
 
-export class AppContainer extends Component<{ routes: PlainRoute, store: Store<any> }, {}> {
+export class AppContainer extends Component<{ routes: PlainRoute, store: Store<any>, history: History }, {}> {
   static propTypes = {
     routes: PropTypes.object.isRequired,
     store: PropTypes.object.isRequired
@@ -14,11 +17,13 @@ export class AppContainer extends Component<{ routes: PlainRoute, store: Store<a
   }
 
   render() {
-    const { routes, store } = this.props;
+    const { routes, store, history } = this.props;
 
     return (
       <Provider store={store}>
-        <Router history={browserHistory} children={routes} />
+        <OidcProvider store={store} userManager={userManager}>
+          <Router history={history} children={routes} />
+        </OidcProvider>
       </Provider>
     );
   }

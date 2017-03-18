@@ -1,25 +1,27 @@
 {
-    "compilerOptions": {
-        "allowJs": true,
-        "noImplicitAny": true,
-        "allowUnreachableCode": false,
-        "inlineSourceMap": true,
-        "inlineSources": true,
-        "noImplicitReturns": true,
-        "noImplicitThis": true,
-        "jsx": "react",
-        "target": "es6",
-        "outDir": "dist",
-        "module": "commonjs"
-    },
-    "include": [
-        "src/**/*",
-        "**/*.d.ts"
-    ],
-    "exclude": [
-        "node_modules",
-        "build",
-        "config",
-        "release"
-    ]
+  "compilerOptions": {
+    "allowJs": false,
+    "noImplicitAny": true,
+    "allowUnreachableCode": false,
+    "inlineSourceMap": true,
+    "inlineSources": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "allowUnusedLabels": false,
+    "noUnusedLocals": true,
+    "jsx": "react",
+    "target": "es6",
+    "outDir": "dist",
+    "module": "commonjs"
+  },
+  "include": [
+    "src/**/*",
+    "**/*.d.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "build",
+    "config",
+    "release"
+  ]
 }

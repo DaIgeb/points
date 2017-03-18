@@ -6,7 +6,7 @@ export const router = Router();
 // TODO display login/register page
 router.get('/login', (req, res) => {
   if (req.query.return) {
-    req.session.oauth2return = req.query.return;
+    (req as any).session.oauth2return = req.query.return;
   }
 
   res.redirect('google');
@@ -16,17 +16,17 @@ router.get(
   '/google',
   passport.authenticate('google', { scope: ['email'] })
 );
-
+/*
 router.get(
   '/google/callback',
   passport.authenticate('google', { failureRedirect: '/auth/google/failure' }),
   (req, res) => {
-    const redirect = req.session.oauth2return || '/';
-    delete req.session.oauth2return;
+    const redirect = (req as any).session.oauth2return || '/';
+    delete (req as any).session.oauth2return;
 
     res.redirect(redirect);
   }
-);
+);*/
 
 router.get('/logout', (req, res) => {
   req.logout();

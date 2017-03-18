@@ -2,6 +2,9 @@ import { __DEV__ } from './globals';
 import { AppContainer } from './containers/AppContainer';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
+import { syncHistoryWithStore } from 'react-router-redux';
+import { browserHistory as backingHistory} from 'react-router';
+
 import { createStore } from './store/createStore';
 import { createRoutes } from './routes/index';
 import * as injectTapEventPlugin from 'react-tap-event-plugin';
@@ -12,7 +15,9 @@ injectTapEventPlugin();
 // Store Instantiation
 // ========================================================
 const initialState = (window as any).___INITIAL_STATE__;
-const store = createStore(initialState);
+const store = createStore(initialState, backingHistory);
+const history = syncHistoryWithStore(backingHistory, store);
+store.unsubscribeHistory = history.unsubscribe;
 
 // ========================================================
 // Render Setup
@@ -23,7 +28,7 @@ let render = () => {
   const routes = createRoutes(store);
 
   ReactDOM.render(
-    <AppContainer store={store} routes={routes} />,
+    <AppContainer store={store} routes={routes} history={history} />,
     MOUNT_NODE
   );
 };

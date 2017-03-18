@@ -1,9 +1,10 @@
 export type TEventState = {
-  id: number;
+  _id: number;
   date: Date;
   name: string;
   points: number;
   distance: number;
+  elevation: number;
   participants: TEventParticipant[]
 };
 
@@ -18,11 +19,11 @@ export type TPerson = TEventParticipant & {
 };
 
 export type TEventsState = {
-    events: TEventState[]
+  events: TEventState[]
 };
 
 export type TGlobalState = {
-    event: TEventState;
-    events: TEventsState;
-    people: TPerson[];
+  event: TEventState;
+  events: TEventsState;
+  people: TPerson[];
 };

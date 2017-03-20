@@ -3,7 +3,12 @@ import { Model as EventModel } from './Model';
 import { Model as PersonModel } from '../people/Model';
 import { Router, Request } from 'express';
 
+import {requireRole} from '../../authenticate';
+
 export const router = Router();
+
+
+router.use(requireRole('admin', 'pointAdmin'));
 
 router.get('', (req, res) => {
   const query = buildEventQuery(req);

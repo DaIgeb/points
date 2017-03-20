@@ -5,7 +5,7 @@ import { push } from 'react-router-redux';
 import {userManager} from '../../globals';
 
 class CallbackPageComponent extends React.Component<{ push: (args: string) => void }, {}> {
-  successCallback = () => {
+  successCallback = (user: any) => {
     this.props.push('/');
   }
 
@@ -14,10 +14,8 @@ class CallbackPageComponent extends React.Component<{ push: (args: string) => vo
   }
 
   render() {
-    console.log('Rendering callback', this.props);
-    const url = (this.props as any).location.search;
     return (
-      <CallbackComponent url={url} userManager={userManager} successCallback={this.successCallback} errorCallback={this.errorCallback} >
+      <CallbackComponent userManager={userManager} successCallback={this.successCallback} errorCallback={this.errorCallback} >
         <div>Redirecting...</div>
       </CallbackComponent>
     );

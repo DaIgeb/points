@@ -48,14 +48,24 @@ export const saveEvent = (event: {
 };
 
 export const loadEvents = () => {
-  return (dispatch: (args: any) => void, getState: () => { events: TEventsState, people: TPerson[] }) => {
+  return (dispatch: (args: any) => void, getState: () => { oidc: any, events: TEventsState, people: TPerson[] }) => {
+    const token = getState().oidc.user.id_token;
+    const headers = new Headers();
+    headers.append('Accept', 'application/json');
+    headers.append('Authorization', `Bearer ${token}`);
+
+
+    const options = {
+      method: 'GET',
+      headers
+    };
+    const apiCall = fetch('/api/v1/events', options)
+      .then((res) => res.json())
+      .then((data) => ({ data }))
+      .catch((error) => ({ error }));
+
+    apiCall.then(data => console.log(data));
     return new Promise((resolve: () => void) => {
-      const request = new XMLHttpRequest();
-      request.open('GET', '/api/v1/events');
-      request.onreadystatechange = (xhr) => {
-        console.log('New state for events loading', xhr);
-      };
-      request.send();
       setTimeout(() => {
         dispatch({
           type: EVENTS_LOADED,
